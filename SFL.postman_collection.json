@@ -1,0 +1,328 @@
+{
+	"info": {
+		"_postman_id": "ea0e4239-e529-48f5-8a57-40509259a86c",
+		"name": "SFL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "{{BaseUrl}}/api/v1/auth/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a3399777-0c5c-4d75-b6fb-0c80fdb009c7",
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"AuthToken\", data.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"admin\",\r\n    \"password\":\"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/auth/login",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer_{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/users",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/users/1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer_{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/users/1",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/users/create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer_{{AuthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"test2\",\r\n    \"password\":\"test2\",\r\n    \"firstName\":\"test2_firstName\",\r\n    \"lastName\":\"test2_lastName\",\r\n    \"email\":\"test2@localnet.loc\",\r\n    \"roles\": [\r\n        \"ROLE_WAITER\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/users/create",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"users",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/tables",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer_{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/tables",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"tables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/tables/create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer_{{AuthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tableNumber\":1,\r\n    \"isBusy\":false,\r\n    \"isReserved\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/tables/create",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"tables",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/tables/1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer_{{AuthToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/tables/1",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"tables",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/tables/waiter/1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer_{{AuthToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/tables/waiter/1",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"tables",
+						"waiter",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{BaseUrl}}/api/v1/manager/tables/assign",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer_{{AuthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tableId\":1,\r\n    \"waiterId\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/api/v1/manager/tables/assign",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"manager",
+						"tables",
+						"assign"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e8a8abdc-3816-411c-902c-ba2f80933095",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5b42817c-e550-4261-b64d-fd26ef452c42",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "0b4efe33-b32e-4f08-888b-9b04e81cdeb2",
+			"key": "BaseUrl",
+			"value": ""
+		},
+		{
+			"id": "360dd94e-ff68-4a8f-815f-bab34a2a710b",
+			"key": "AuthToken",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}
