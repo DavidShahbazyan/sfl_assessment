@@ -8,6 +8,7 @@ import am.davsoft.sfl_assessment.dto.user.ManagerUserDto;
 import am.davsoft.sfl_assessment.model.CafeTable;
 import am.davsoft.sfl_assessment.model.Product;
 import am.davsoft.sfl_assessment.model.User;
+import am.davsoft.sfl_assessment.rest.api.ManagerRestController;
 import am.davsoft.sfl_assessment.service.ProductService;
 import am.davsoft.sfl_assessment.service.TableService;
 import am.davsoft.sfl_assessment.service.UserService;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping(value = "/api/v1/manager")
-public class ManagerRestControllerV1 {
+public class ManagerRestControllerV1 implements ManagerRestController {
     private final UserService userService;
     private final TableService tableService;
     private final ProductService productService;
@@ -37,7 +38,7 @@ public class ManagerRestControllerV1 {
     }
 
     //region Users
-    @GetMapping(value = "/users")
+    @Override
     public ResponseEntity<List<ManagerUserDto>> getAllUsers() {
         List<User> userList = userService.getAll();
         if (userList.isEmpty()) {
@@ -46,7 +47,7 @@ public class ManagerRestControllerV1 {
         return ResponseEntity.ok(userList.stream().map(ManagerUserDto::fromModel).collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/users/{id}")
+    @Override
     public ResponseEntity<ManagerUserDto> getUserById(@PathVariable(name = "id") Long id) {
         User user = userService.findById(id);
         if (user == null) {
@@ -55,7 +56,7 @@ public class ManagerRestControllerV1 {
         return ResponseEntity.ok(ManagerUserDto.fromModel(user));
     }
 
-    @PostMapping(value = "/users/create")
+    @Override
     public ResponseEntity<ManagerUserDto> createNewUser(@RequestBody ManagerNewUserDto managerNewUserDto, HttpServletRequest request) {
         User saved = userService.register(managerNewUserDto.toModel());
         return ResponseEntity.created(
@@ -69,7 +70,7 @@ public class ManagerRestControllerV1 {
     //endregion
 
     //region Tables
-    @GetMapping(value = "/tables")
+    @Override
     public ResponseEntity<List<CafeTableDto>> getAllTables() {
         List<CafeTable> cafeTableList = tableService.getAll();
         if (cafeTableList.isEmpty()) {
@@ -78,7 +79,7 @@ public class ManagerRestControllerV1 {
         return ResponseEntity.ok(cafeTableList.stream().map(CafeTableDto::fromModel).collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/tables/waiter/{id}")
+    @Override
     public ResponseEntity<List<CafeTableDto>> getAllTablesByWaiterId(@PathVariable(name = "id") Long id) {
         List<CafeTable> cafeTableList = tableService.findAllByWaiterId(id);
         if (cafeTableList.isEmpty()) {
@@ -87,7 +88,7 @@ public class ManagerRestControllerV1 {
         return ResponseEntity.ok(cafeTableList.stream().map(CafeTableDto::fromModel).collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/tables/{id}")
+    @Override
     public ResponseEntity<CafeTableDto> getTableById(@PathVariable(name = "id") Long id) {
         CafeTable cafeTable = tableService.findById(id);
         if (cafeTable == null) {
@@ -96,7 +97,7 @@ public class ManagerRestControllerV1 {
         return ResponseEntity.ok(CafeTableDto.fromModel(cafeTable));
     }
 
-    @PostMapping(value = "/tables/create")
+    @Override
     public ResponseEntity<CafeTableDto> createNewTable(@RequestBody CafeTableDto cafeTableDto, HttpServletRequest request) {
         CafeTable saved = tableService.create(cafeTableDto.toModel());
         return ResponseEntity.created(
@@ -108,7 +109,7 @@ public class ManagerRestControllerV1 {
                 .build();
     }
 
-    @PostMapping(value = "/tables/assign")
+    @Override
     public ResponseEntity<CafeTableDto> assignTable(@RequestBody TableAssignmentDto assignmentDto) {
         CafeTable cafeTable = tableService.findById(assignmentDto.getTableId());
         if (cafeTable == null) {
@@ -125,7 +126,7 @@ public class ManagerRestControllerV1 {
     //endregion
 
     //region Products
-    @GetMapping(value = "/products")
+    @Override
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<Product> productList = productService.getAll();
         if (productList.isEmpty()) {
@@ -134,7 +135,7 @@ public class ManagerRestControllerV1 {
         return ResponseEntity.ok(productList.stream().map(ProductDto::fromModel).collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/products/{id}")
+    @Override
     public ResponseEntity<ProductDto> getProductById(@PathVariable(name = "id") Long id) {
         Product product = productService.findById(id);
         if (product == null) {
@@ -143,7 +144,7 @@ public class ManagerRestControllerV1 {
         return ResponseEntity.ok(ProductDto.fromModel(product));
     }
 
-    @PostMapping(value = "/products/create")
+    @Override
     public ResponseEntity<ProductDto> createNewProduct(@RequestBody ProductDto productDto, HttpServletRequest request) {
         Product saved = productService.create(productDto.toModel());
         return ResponseEntity.created(

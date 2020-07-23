@@ -2,6 +2,7 @@ package am.davsoft.sfl_assessment.rest.v1;
 
 import am.davsoft.sfl_assessment.dto.AuthenticationRequestDto;
 import am.davsoft.sfl_assessment.model.User;
+import am.davsoft.sfl_assessment.rest.api.AuthenticationRestController;
 import am.davsoft.sfl_assessment.security.jwt.JwtTokenProvider;
 import am.davsoft.sfl_assessment.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/api/v1/auth")
-public class AuthenticationRestControllerV1 {
+public class AuthenticationRestControllerV1 implements AuthenticationRestController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
@@ -36,8 +37,8 @@ public class AuthenticationRestControllerV1 {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
+    @Override
+    public ResponseEntity<Map<Object, Object>> login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));

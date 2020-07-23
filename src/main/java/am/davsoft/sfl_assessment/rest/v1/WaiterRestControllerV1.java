@@ -3,10 +3,10 @@ package am.davsoft.sfl_assessment.rest.v1;
 import am.davsoft.sfl_assessment.dto.order.CafeOrderDto;
 import am.davsoft.sfl_assessment.dto.order.NewOrderDto;
 import am.davsoft.sfl_assessment.dto.product.NewProductInOrderDto;
-import am.davsoft.sfl_assessment.dto.product.ProductInOrderDto;
 import am.davsoft.sfl_assessment.dto.product.RemoveProductInOrderDto;
 import am.davsoft.sfl_assessment.dto.table.CafeTableDto;
 import am.davsoft.sfl_assessment.model.*;
+import am.davsoft.sfl_assessment.rest.api.WaiterRestController;
 import am.davsoft.sfl_assessment.service.OrderService;
 import am.davsoft.sfl_assessment.service.ProductService;
 import am.davsoft.sfl_assessment.service.TableService;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping(value = "/api/v1/waiter")
-public class WaiterRestControllerV1 {
+public class WaiterRestControllerV1 implements WaiterRestController {
     private final TableService tableService;
     private final OrderService orderService;
     private final ProductService productService;
@@ -45,7 +45,7 @@ public class WaiterRestControllerV1 {
     }
 
 
-    @GetMapping(value = "/tables")
+    @Override
     public ResponseEntity<List<CafeTableDto>> getAllTables(HttpServletRequest request) {
         List<CafeTable> cafeTableList = tableService.findAllByWaiterId(((User) request.getUserPrincipal()).getId());
         if (cafeTableList.isEmpty()) {
@@ -54,7 +54,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(cafeTableList.stream().map(CafeTableDto::fromModel).collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/tables/{id}")
+    @Override
     public ResponseEntity<CafeTableDto> getTableById(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         CafeTable cafeTable = loadTableByIdAndWaiterId(id, request);
         if (cafeTable == null) {
@@ -63,7 +63,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeTableDto.fromModel(cafeTable));
     }
 
-    @PostMapping(value = "/tables/free/{id}")
+    @Override
     public ResponseEntity<CafeTableDto> freeTableById(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         CafeTable cafeTable = loadTableByIdAndWaiterId(id, request);
         if (cafeTable == null) {
@@ -73,7 +73,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeTableDto.fromModel(tableService.update(cafeTable)));
     }
 
-    @PostMapping(value = "/tables/reserve/{id}")
+    @Override
     public ResponseEntity<CafeTableDto> reserveTableById(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         CafeTable cafeTable = loadTableByIdAndWaiterId(id, request);
         if (cafeTable == null) {
@@ -83,7 +83,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeTableDto.fromModel(tableService.update(cafeTable)));
     }
 
-    @PostMapping(value = "/tables/occupy/{id}")
+    @Override
     public ResponseEntity<CafeTableDto> occupyTableById(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         CafeTable cafeTable = loadTableByIdAndWaiterId(id, request);
         if (cafeTable == null) {
@@ -93,7 +93,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeTableDto.fromModel(tableService.update(cafeTable)));
     }
 
-    @GetMapping(value = "/orders")
+    @Override
     public ResponseEntity<List<CafeOrderDto>> getAllOrders(HttpServletRequest request) {
         List<CafeOrder> cafeOrderList = orderService.findAllByWaiterId(((User) request.getUserPrincipal()).getId());
         if (cafeOrderList.isEmpty()) {
@@ -102,7 +102,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(cafeOrderList.stream().map(CafeOrderDto::fromModel).collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/orders/{id}")
+    @Override
     public ResponseEntity<CafeOrderDto> getOrderById(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         CafeOrder cafeOrder = loadOrderByIdAndWaiterId(id, request);
         if (cafeOrder == null) {
@@ -111,7 +111,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeOrderDto.fromModel(cafeOrder));
     }
 
-    @PostMapping(value = "/orders/create")
+    @Override
     public ResponseEntity<CafeTableDto> createOrder(@RequestBody NewOrderDto newOrderDto, HttpServletRequest request) {
         CafeTable cafeTable = loadTableByIdAndWaiterId(newOrderDto.getTableId(), request);
         if (cafeTable == null) {
@@ -135,7 +135,7 @@ public class WaiterRestControllerV1 {
                 .build();
     }
 
-    @PostMapping(value = "/orders/close/{id}")
+    @Override
     public ResponseEntity<CafeOrderDto> closeOrderById(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         CafeOrder cafeOrder = loadOrderByIdAndWaiterId(id, request);
         if (cafeOrder == null) {
@@ -149,7 +149,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeOrderDto.fromModel(orderService.update(cafeOrder)));
     }
 
-    @PostMapping(value = "/orders/cancel/{id}")
+    @Override
     public ResponseEntity<CafeOrderDto> cancelOrderById(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         CafeOrder cafeOrder = loadOrderByIdAndWaiterId(id, request);
         if (cafeOrder == null) {
@@ -163,7 +163,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeOrderDto.fromModel(orderService.update(cafeOrder)));
     }
 
-    @PostMapping(value = "/orders/products/add")
+    @Override
     public ResponseEntity<CafeOrderDto> addProductToOrder(@RequestBody NewProductInOrderDto newProductInOrderDto, HttpServletRequest request) {
         CafeOrder order = loadOrderByIdAndWaiterId(newProductInOrderDto.getOrderId(), request);
         if (!OrderState.OPEN.equals(order.getOrderState())) {
@@ -181,7 +181,7 @@ public class WaiterRestControllerV1 {
         return ResponseEntity.ok(CafeOrderDto.fromModel(orderService.update(order)));
     }
 
-    @PostMapping(value = "/orders/products/remove")
+    @Override
     public ResponseEntity<CafeOrderDto> removeProductFromOrder(@RequestBody RemoveProductInOrderDto removeProductInOrderDto, HttpServletRequest request) {
         CafeOrder order = loadOrderByIdAndWaiterId(removeProductInOrderDto.getOrderId(), request);
         if (!OrderState.OPEN.equals(order.getOrderState())) {
